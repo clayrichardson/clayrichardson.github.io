@@ -9,7 +9,7 @@
   <meta name="author" content="clay richardson">
 
   
-  <meta name="description" content="I got my hands on a couple of TI LaunchPads and was surprised there is no official support for Linux. Sad day. Regardless, at $4.30 each + shipping, &hellip;">
+  <meta name="description" content="In my previous post, I was having trouble debugging and writing the binary files to the TI LaunchPad from Ubuntu 11.10 running in VirtualBox on Mac &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/">TI LaunchPad Development on Ubuntu 11.10 Running in VirtualBox</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T02:45:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In my previous post, I was having trouble debugging and writing the binary files to the <a href="http://www.ti.com/launchpad">TI LaunchPad</a> from Ubuntu 11.10 running in <a href="https://www.virtualbox.org/">VirtualBox</a> on Mac OS X Lion. I also tried using the VirtualBox ExtensionPack with USB 2.0 support to no avail.</p>
+
+<p>This is an extension of the <a href="http://clayrichardson.me/2012/03/15/ti-launchpad-development-on-ubuntu-11-10/">previous post</a> if you&rsquo;re running Ubuntu 11.10 in VirtualBox 4.1.10 on OS X Lion.</p>
+
+<p>So I&rsquo;ve figured out how to program and debug the Launchpad from within the guest OS. Albeit with a couple of caveats:</p>
+
+<ol>
+<li>The driver from <a href="http://code.google.com/p/osx-launchpad/">osx-launchpad</a> will need to be installed on the host OS.</li>
+<li>You have to use remote debugging via the GDB remote stub that mspdebug creates.</li>
+<li>When you use &ldquo;target remote&rdquo; from msp430-gdb, it will segfault, yeay!</li>
+<li>There will be some compiling from source to avoid the segfault party.</li>
+</ol>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -194,6 +247,10 @@ Following the link to the <a href="http://sourceforge.net/apps/mediawiki/mspgcc/
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/">TI LaunchPad Development on Ubuntu 11.10 Running in VirtualBox</a>
+      </li>
     
       <li class="post">
         <a href="/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/">TI LaunchPad Development on Ubuntu 11.10</a>
