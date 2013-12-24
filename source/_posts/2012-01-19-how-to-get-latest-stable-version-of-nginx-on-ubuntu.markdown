@@ -6,5 +6,5 @@ comments: true
 categories:
 ---
 
-{% include_code [latest nginx] latest_nginx.sh%}
+{% include_code [latest nginx] lang:bash latest_nginx.sh%}
 
