@@ -5,13 +5,23 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - //clay richardson</title>
+  <title>How to Get Latest Stable Version of Nginx on Ubuntu - //clay richardson</title>
   <meta name="author" content="clay richardson">
 
   
-  <meta name="description" content="Blog Archive 2013 TI LaunchPad Development on Ubuntu 11.10
-Dec 23 2013 2012 How to Get Latest Stable Version of Nginx on Ubuntu
-Jan 19 2012 Recent &hellip;">
+  <meta name="description" content="[latest nginx] (latest_nginx.sh) download
+1
+2
+3
+4
+5
+6
+7
+8
+bash install nginx
+sudo apt-get update
+sudo apt-get install python-software-properites
+sudo &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +30,7 @@ Jan 19 2012 Recent &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://clayrichardson.me/blog/archives">
+  <link rel="canonical" href="http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="//clay richardson" type="application/atom+xml">
@@ -79,45 +89,105 @@ Jan 19 2012 Recent &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">How to Get Latest Stable Version of Nginx on Ubuntu</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-19T12:46:00-06:00" pubdate data-updated="true">Jan 19<span>th</span>, 2012</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
-
-  
-  <h2>2013</h2>
-
-<article>
-  
-<h1><a href="/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10/">TI LaunchPad Development on Ubuntu 11.10</a></h1>
-<time datetime="2013-12-23T22:45:15-06:00" pubdate><span class='month'>Dec</span> <span class='day'>23</span> <span class='year'>2013</span></time>
-
-
-</article>
-
-
-
-  
-  <h2>2012</h2>
-
-<article>
-  
-<h1><a href="/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/">How to Get Latest Stable Version of Nginx on Ubuntu</a></h1>
-<time datetime="2012-01-19T12:46:00-06:00" pubdate><span class='month'>Jan</span> <span class='day'>19</span> <span class='year'>2012</span></time>
+<div class="entry-content"><figure class='code'><figcaption><span>[latest nginx]  (latest_nginx.sh)</span> <a href='/downloads/code/latest_nginx.sh'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>bash install nginx
+</span><span class='line'>sudo apt-get update
+</span><span class='line'>sudo apt-get install python-software-properites
+</span><span class='line'>sudo add-apt-repository ppa:nginx/stable
+</span><span class='line'>sudo apt-get update
+</span><span class='line'>sudo apt-get install nginx
+</span><span class='line'>nginx -v
+</span><span class='line'>sudo service nginx start
+</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">clay richardson</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-19T12:46:00-06:00" pubdate data-updated="true">Jan 19<span>th</span>, 2012</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/" data-via="" data-counturl="http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10/" title="Next Post: TI LaunchPad development on Ubuntu 11.10">TI LaunchPad development on Ubuntu 11.10 &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -160,7 +230,10 @@ Jan 19 2012 Recent &hellip;">
       var disqus_shortname = 'clayrichardson';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/';
+        var disqus_url = 'http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -2,17 +2,31 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>
-            http://clayrichardson.me/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/
+            http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/
         </loc>
-        <lastmod>2013-12-23T21:58:41-06:00</lastmod>
+        <lastmod>2013-12-23T23:26:10-06:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://clayrichardson.me/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10/
+        </loc>
+        <lastmod>2013-12-24T00:24:31-06:00</lastmod>
     </url>
     <url>
         <loc>http://clayrichardson.me/blog/archives/</loc>
-        <lastmod>2013-12-23T21:58:41-06:00</lastmod>
+        <lastmod>2013-12-24T00:24:31-06:00</lastmod>
+    </url>
+    <url>
+        <loc>http://clayrichardson.me/downloads/code/pgp_key.txt</loc>
+        <lastmod>2013-12-23T22:18:23-06:00</lastmod>
     </url>
     <url>
         <loc>http://clayrichardson.me/</loc>
-        <lastmod>2013-12-23T21:58:41-06:00</lastmod>
+        <lastmod>2013-12-24T00:24:31-06:00</lastmod>
+    </url>
+    <url>
+        <loc>http://clayrichardson.me/pgp/</loc>
+        <lastmod>2013-12-23T22:43:44-06:00</lastmod>
     </url>
     <url>
         <loc>http://clayrichardson.me/robots.txt</loc>

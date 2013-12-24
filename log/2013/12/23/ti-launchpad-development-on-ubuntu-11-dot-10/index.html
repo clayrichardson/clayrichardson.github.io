@@ -1,24 +1,110 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[//clay richardson]]></title>
-  <link href="http://clayrichardson.me/atom.xml" rel="self"/>
-  <link href="http://clayrichardson.me/"/>
-  <updated>2013-12-24T00:24:31-06:00</updated>
-  <id>http://clayrichardson.me/</id>
-  <author>
-    <name><![CDATA[clay richardson]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TI LaunchPad Development on Ubuntu 11.10 - //clay richardson</title>
+  <meta name="author" content="clay richardson">
 
   
-  <entry>
-    <title type="html"><![CDATA[TI LaunchPad Development on Ubuntu 11.10]]></title>
-    <link href="http://clayrichardson.me/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10/"/>
-    <updated>2013-12-23T22:45:15-06:00</updated>
-    <id>http://clayrichardson.me/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10</id>
-    <content type="html"><![CDATA[<p>I got my hands on a couple of <a href="http://www.ti.com/launchpad">TI LaunchPads</a> and was surprised there is no official support for Linux. Sad day. Regardless, at $4.30 each + shipping, they&rsquo;re a steal.</p>
+  <meta name="description" content="I got my hands on a couple of TI LaunchPads and was surprised there is no official support for Linux. Sad day. Regardless, at $4.30 each + shipping, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://clayrichardson.me/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="//clay richardson" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46624039-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">//clay richardson</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:clayrichardson.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/pgp">PGP</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">TI LaunchPad Development on Ubuntu 11.10</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-23T22:45:15-06:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I got my hands on a couple of <a href="http://www.ti.com/launchpad">TI LaunchPads</a> and was surprised there is no official support for Linux. Sad day. Regardless, at $4.30 each + shipping, they&rsquo;re a steal.</p>
 
 <p>Interested in getting development running on Ubuntu, I was reading <a href="http://hackaday.com/2010/08/11/how-to-launchpad-programming-with-linux/">Hack A Day&rsquo;s LaunchPad on Ubuntu article</a> until I got to the <a href="http://mspgcc4.sourceforge.net/">mspgcc4 project page</a> and noticed</p>
 
@@ -197,36 +283,130 @@ Following the link to the <a href="http://sourceforge.net/apps/mediawiki/mspgcc/
 <p>Happy hacking!</p>
 
 <p>Edit: <a href="http://clayrichardson.me/2012/03/16/ti-launchpad-development-on-ubuntu-11-10-running-in-virtualbox/">I was able to get it work, aw yeah!</a></p>
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[How to Get Latest Stable Version of Nginx on Ubuntu]]></title>
-    <link href="http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/"/>
-    <updated>2012-01-19T12:46:00-06:00</updated>
-    <id>http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu</id>
-    <content type="html"><![CDATA[<figure class='code'><figcaption><span>[latest nginx]  (latest_nginx.sh)</span> <a href='http://clayrichardson.me/downloads/code/latest_nginx.sh'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>bash install nginx
-</span><span class='line'>sudo apt-get update
-</span><span class='line'>sudo apt-get install python-software-properites
-</span><span class='line'>sudo add-apt-repository ppa:nginx/stable
-</span><span class='line'>sudo apt-get update
-</span><span class='line'>sudo apt-get install nginx
-</span><span class='line'>nginx -v
-</span><span class='line'>sudo service nginx start
-</span></code></pre></td></tr></table></div></figure>
+
+<span class="byline author vcard">Posted by <span class="fn">clay richardson</span></span>
+
+      
 
 
 
-]]></content>
-  </entry>
+
+
+
+
+
   
-</feed>
+
+
+<time datetime="2013-12-23T22:45:15-06:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://clayrichardson.me/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10/" data-via="" data-counturl="http://clayrichardson.me/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/" title="Previous Post: How to get latest stable version of nginx on ubuntu">&laquo; How to get latest stable version of nginx on ubuntu</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10/">TI LaunchPad Development on Ubuntu 11.10</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/">How to Get Latest Stable Version of Nginx on Ubuntu</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - clay richardson -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'clayrichardson';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://clayrichardson.me/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10/';
+        var disqus_url = 'http://clayrichardson.me/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
