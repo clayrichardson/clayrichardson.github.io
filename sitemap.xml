@@ -1,15 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://clayrichardson.github.io/blog/archives/</loc>
-        <lastmod>2013-12-23T03:10:38-06:00</lastmod>
+        <loc>
+            http://clayrichardson.me/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/
+        </loc>
+        <lastmod>2013-12-23T21:58:41-06:00</lastmod>
     </url>
     <url>
-        <loc>http://clayrichardson.github.io/</loc>
-        <lastmod>2013-12-23T03:10:38-06:00</lastmod>
+        <loc>http://clayrichardson.me/blog/archives/</loc>
+        <lastmod>2013-12-23T21:58:41-06:00</lastmod>
     </url>
     <url>
-        <loc>http://clayrichardson.github.io/robots.txt</loc>
-        <lastmod>2013-12-23T03:10:38-06:00</lastmod>
+        <loc>http://clayrichardson.me/</loc>
+        <lastmod>2013-12-23T21:58:41-06:00</lastmod>
+    </url>
+    <url>
+        <loc>http://clayrichardson.me/robots.txt</loc>
+        <lastmod>2013-12-23T21:43:56-06:00</lastmod>
     </url>
 </urlset>

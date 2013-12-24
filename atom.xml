@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
-  <link href="http://clayrichardson.github.io/atom.xml" rel="self"/>
-  <link href="http://clayrichardson.github.io/"/>
-  <updated>2013-12-23T03:48:39-06:00</updated>
-  <id>http://clayrichardson.github.io/</id>
+  <title><![CDATA[//clay richardson]]></title>
+  <link href="http://clayrichardson.me/atom.xml" rel="self"/>
+  <link href="http://clayrichardson.me/"/>
+  <updated>2013-12-23T22:09:14-06:00</updated>
+  <id>http://clayrichardson.me/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[clay richardson]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to Get Latest Stable Version of Nginx on Ubuntu]]></title>
+    <link href="http://clayrichardson.me/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/"/>
+    <updated>2012-01-19T12:46:00-06:00</updated>
+    <id>http://clayrichardson.me/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu</id>
+    <content type="html"><![CDATA[<figure class='code'><figcaption><span>[latest nginx] (latest_nginx.sh)</span> <a href='http://clayrichardson.me/downloads/code/latest_nginx.sh'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>bash install nginx
+</span><span class='line'>sudo apt-get update
+</span><span class='line'>sudo apt-get install python-software-properites
+</span><span class='line'>sudo add-apt-repository ppa:nginx/stable
+</span><span class='line'>sudo apt-get update
+</span><span class='line'>sudo apt-get install nginx
+</span><span class='line'>nginx -v
+</span><span class='line'>sudo service nginx start
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
 </feed>
