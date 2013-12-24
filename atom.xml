@@ -4,7 +4,7 @@
   <title><![CDATA[//clay richardson]]></title>
   <link href="http://clayrichardson.me/atom.xml" rel="self"/>
   <link href="http://clayrichardson.me/"/>
-  <updated>2013-12-24T01:37:24-06:00</updated>
+  <updated>2013-12-24T02:59:56-06:00</updated>
   <id>http://clayrichardson.me/</id>
   <author>
     <name><![CDATA[clay richardson]]></name>
@@ -12,6 +12,127 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Configure Time Machine to Save Backups to a TrueCrypt Volume]]></title>
+    <link href="http://clayrichardson.me/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume/"/>
+    <updated>2013-05-13T12:19:00-05:00</updated>
+    <id>http://clayrichardson.me/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume</id>
+    <content type="html"><![CDATA[<p>I have an encrypted 1TB portable hard drive, and I wanted to use that as a Time Machine backup.</p>
+
+<p>TL;DR:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo tmutil setdestination /Volumes/TC\ Backup/</span></code></pre></td></tr></table></div></figure>
+
+
+<!-- more -->
+
+
+<p><img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-23-at-1-17-15-am.png"></p>
+
+<p>But for some reason, Time Machine doesn&rsquo;t like my TrueCrypt Volume.
+<img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-23-at-1-17-18-am.png"></p>
+
+<p>I have the TrueCrypt Volume mounted.
+<img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-23-at-11-30-24-am.png"></p>
+
+<p><img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-22-at-2-57-37-pm.png"></p>
+
+<p>Here is what it looks like, it&rsquo;s just a regular volume.
+<img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-22-at-2-56-24-pm.png"></p>
+
+<p>Why doesn&rsquo;t Time Machine allow me to use it?
+<img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/timemachineyuno.jpg"></p>
+
+<p>Since the GUI won&rsquo;t let me choose the TrueCrypt volume, we can use Time Machine&rsquo;s command line tool to set the backup drive.
+You can see what commands <code>tmutil</code> supports by looking at its manual:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ man tmutil</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The commands we&rsquo;re interested in are:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>setdestination
+</span><span class='line'>destinationinfo
+</span><span class='line'>removedestination</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&rsquo;re going to use <code>setdestination</code> to force Time Machine to use the TrueCrypt Volume to store backups, <code>destinationinfo</code> to make sure the correct drive is set, and <code>removedestination</code> if the wrong destination was specified.</p>
+
+<p>Let&rsquo;s find out where our volume is mounted:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>clay@laptop:1.9.3: ~ $ mount
+</span><span class='line'>/dev/disk1 on / (hfs, local, journaled)
+</span><span class='line'>devfs on /dev (devfs, local, nobrowse)
+</span><span class='line'>map -hosts on /net (autofs, nosuid, automounted, nobrowse)
+</span><span class='line'>map auto_home on /home (autofs, automounted, nobrowse)
+</span><span class='line'>TrueCrypt@osxfuse0 on /private/tmp/.truecrypt_aux_mnt1 (osxfusefs, synchronous, nobrowse)
+</span><span class='line'>/dev/disk3 on /Volumes/TC Backup (hfs, local, nodev, nosuid, journaled, noowners)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>My volume is named <code>TC Backup</code>, so I&rsquo;m going to issue the command:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>richardsonclay@yo:1.9.3: ~ $ sudo tmutil setdestination /Volumes/TC\ Backup/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Replace <code>TC\ Backup</code> with the name of your mounted TrueCrypt volume.</p>
+
+<p>We can check to see if the information is correct:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>richardsonclay@yo:1.9.3: ~ $ tmutil destinationinfo
+</span><span class='line'>====================================================
+</span><span class='line'>Name          : TC Backup
+</span><span class='line'>Kind          : Local
+</span><span class='line'>Mount Point   : /Volumes/TC Backup
+</span><span class='line'>ID            : 12345678-1234-ABCD-ABCD-1234ABCD1234</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If it&rsquo;s not, you can use <code>removedestination</code> to remove the destination:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>richardsonclay@yo:1.9.3: ~ $ tmutil removedestination 12345678-1234-ABCD-ABCD-1234ABCD1234</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You should be able to see the drive in the Time Machine Preferences.
+<img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-22-at-3-06-05-pm.png"></p>
+
+<p>Turn Time Machine on.
+<img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-22-at-3-06-27-pm.png"></p>
+
+<p>And start your backup!
+<img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-22-at-3-06-47-pm.png"></p>
+
+<p><img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-22-at-3-12-18-pm.png"></p>
+
+<p>Time Machine has created the <code>Backups.backupdb</code> folder, and is copying stuff over to it!
+<img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-22-at-3-08-09-pm.png"></p>
+
+<p>Here&rsquo;s what the drive information looks like now that it is being used for Time Machine backups.
+<img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-22-at-3-07-49-pm.png"></p>
+
+<p>Be aware that backups might be CPU intensive, as TrueCrypt needs to transparently encrypt all of the data being copied over.
+<img src="http://clayrichardson.me/images/configure-time-machine-to-save-backups-to-a-truecrypt-volume/screen-shot-2013-05-22-at-3-14-49-pm.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Brew Install All Available AWS Tools]]></title>
@@ -27,6 +148,11 @@
 
 
 <p>You&rsquo;ll get some errors about failing to link service, which is the same file for all of the formulas which try to link it. You&rsquo;ll have to force the link, but let&rsquo;s make sure the files are all the same.</p>
+
+<!-- more -->
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>

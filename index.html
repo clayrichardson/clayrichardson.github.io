@@ -9,7 +9,8 @@
   <meta name="author" content="clay richardson">
 
   
-  <meta name="description" content="If you happen to find yourself using a decent number of AWS services, you might find this useful. If there are any errata, please let me know. As of &hellip;">
+  <meta name="description" content="I have an encrypted 1TB portable hard drive, and I wanted to use that as a Time Machine backup. TL;DR: 1
+$ sudo tmutil setdestination /Volumes/TC\ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +85,53 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume/">Configure Time Machine to Save Backups to a TrueCrypt Volume</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-13T12:19:00-05:00" pubdate data-updated="true">May 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have an encrypted 1TB portable hard drive, and I wanted to use that as a Time Machine backup.</p>
+
+<p>TL;DR:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo tmutil setdestination /Volumes/TC\ Backup/</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/log/2013/03/29/brew-install-all-available-aws-tools/">Brew Install All Available AWS Tools</a></h1>
     
     
@@ -117,83 +165,12 @@
 
 <p>You&rsquo;ll get some errors about failing to link service, which is the same file for all of the formulas which try to link it. You&rsquo;ll have to force the link, but let&rsquo;s make sure the files are all the same.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>clay@laptop:1.9.3: ~ $ which service
-</span><span class='line'>/usr/local/bin/service
-</span><span class='line'>
-</span><span class='line'>clay@laptop:1.9.3: ~ $ ls -alht /usr/local/bin/service
-</span><span class='line'>lrwxr-xr-x  1 clay  admin    43B Mar 29 04:11 /usr/local/bin/service -&gt; ../Cellar/auto-scaling/1.0.61.1/bin/service
-</span><span class='line'>
-</span><span class='line'>clay@laptop:1.9.3: ~ $ shasum /usr/local/bin/service
-</span><span class='line'>2b8c2f25d30db009b04fc2b7ae27591d07c07d7a  /usr/local/bin/service
-</span><span class='line'>
-</span><span class='line'>clay@laptop:1.9.3: ~ $ shasum /usr/local/Cellar/aws-cfn-tools/1.0.12/bin/service
-</span><span class='line'>2b8c2f25d30db009b04fc2b7ae27591d07c07d7a  /usr/local/Cellar/aws-cfn-tools/1.0.12/bin/service
-</span><span class='line'>
-</span><span class='line'>clay@laptop:1.9.3: ~ $ shasum /usr/local/Cellar/cloud-watch/1.0.13.4/bin/service
-</span><span class='line'>2b8c2f25d30db009b04fc2b7ae27591d07c07d7a  /usr/local/Cellar/cloud-watch/1.0.13.4/bin/service
-</span><span class='line'>
-</span><span class='line'>clay@laptop:1.9.3: ~ $ shasum /usr/local/Cellar/elb-tools/1.0.17.0/bin/service
-</span><span class='line'>2b8c2f25d30db009b04fc2b7ae27591d07c07d7a  /usr/local/Cellar/elb-tools/1.0.17.0/bin/service</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So, now that we see they&rsquo;re all the same, we can go on and force the links:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>brew link --overwrite elb-tools cloud-watch aws-cfn-tools</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You might be able to get a a more up-to-date list by grepping for the AmazonWebServicesFormula class in the Homebrew repository.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>grep -irI AmazonWebServicesFormula ./* | awk '{print "brew install " $1}' | sed 's/.\/Library\/Formula\///g' | sed 's/.rb:class//g' | grep -ve 'Library'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That should give you something similar to:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>brew install auto-scaling
-</span><span class='line'>brew install aws-cfn-tools
-</span><span class='line'>brew install aws-elasticache
-</span><span class='line'>brew install aws-elasticbeanstalk
-</span><span class='line'>brew install aws-iam-tools
-</span><span class='line'>brew install aws-sns-cli
-</span><span class='line'>brew install cloud-watch
-</span><span class='line'>brew install ec2-ami-tools
-</span><span class='line'>brew install ec2-api-tools
-</span><span class='line'>brew install elb-tools
-</span><span class='line'>brew install rds-command-line-tools</span></code></pre></td></tr></table></div></figure>
-
-
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/log/2013/03/29/brew-install-all-available-aws-tools/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -605,6 +582,10 @@ Following the link to the <a href="http://sourceforge.net/apps/mediawiki/mspgcc/
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume/">Configure Time Machine to Save Backups to a TrueCrypt Volume</a>
+      </li>
+    
+      <li class="post">
         <a href="/log/2013/03/29/brew-install-all-available-aws-tools/">Brew Install All Available AWS Tools</a>
       </li>
     
@@ -618,10 +599,6 @@ Following the link to the <a href="http://sourceforge.net/apps/mediawiki/mspgcc/
     
       <li class="post">
         <a href="/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/">TI LaunchPad Development on Ubuntu 11.10 Running in VirtualBox</a>
-      </li>
-    
-      <li class="post">
-        <a href="/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/">TI LaunchPad Development on Ubuntu 11.10</a>
       </li>
     
   </ul>
