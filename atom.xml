@@ -4,7 +4,7 @@
   <title><![CDATA[//clay richardson]]></title>
   <link href="http://clayrichardson.me/atom.xml" rel="self"/>
   <link href="http://clayrichardson.me/"/>
-  <updated>2013-12-24T00:24:31-06:00</updated>
+  <updated>2013-12-24T00:29:54-06:00</updated>
   <id>http://clayrichardson.me/</id>
   <author>
     <name><![CDATA[clay richardson]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[TI LaunchPad Development on Ubuntu 11.10]]></title>
-    <link href="http://clayrichardson.me/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10/"/>
-    <updated>2013-12-23T22:45:15-06:00</updated>
-    <id>http://clayrichardson.me/log/2013/12/23/ti-launchpad-development-on-ubuntu-11-dot-10</id>
+    <link href="http://clayrichardson.me/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/"/>
+    <updated>2012-03-15T16:43:00-05:00</updated>
+    <id>http://clayrichardson.me/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10</id>
     <content type="html"><![CDATA[<p>I got my hands on a couple of <a href="http://www.ti.com/launchpad">TI LaunchPads</a> and was surprised there is no official support for Linux. Sad day. Regardless, at $4.30 each + shipping, they&rsquo;re a steal.</p>
 
 <p>Interested in getting development running on Ubuntu, I was reading <a href="http://hackaday.com/2010/08/11/how-to-launchpad-programming-with-linux/">Hack A Day&rsquo;s LaunchPad on Ubuntu article</a> until I got to the <a href="http://mspgcc4.sourceforge.net/">mspgcc4 project page</a> and noticed</p>
