@@ -5,23 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>How to Get Latest Stable Version of Nginx on Ubuntu - //clay richardson</title>
+  <title>Create JPEGs With Random Content Using Python Multiprocessing - //clay richardson</title>
   <meta name="author" content="clay richardson">
 
   
-  <meta name="description" content="[latest nginx] (latest_nginx.sh) download
-1
-2
-3
-4
-5
-6
-7
-8
-bash install nginx
-sudo apt-get update
-sudo apt-get install python-software-properites
-sudo &hellip;">
+  <meta name="description" content="Recently, I had a need to quickly generate a large number of JPEGs. I wrote this python script to generate JPEG images with random dimensions and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -30,7 +18,7 @@ sudo &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu">
+  <link rel="canonical" href="http://clayrichardson.me/log/2012/10/30/create-jpegs-with-random-content-using-python-multiprocessing">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="//clay richardson" type="application/atom+xml">
@@ -93,7 +81,7 @@ sudo &hellip;">
   
   <header>
     
-      <h1 class="entry-title">How to Get Latest Stable Version of Nginx on Ubuntu</h1>
+      <h1 class="entry-title">Create JPEGs With Random Content Using Python Multiprocessing</h1>
     
     
       <p class="meta">
@@ -109,31 +97,93 @@ sudo &hellip;">
   
 
 
-<time datetime="2012-01-19T12:46:00-06:00" pubdate data-updated="true">Jan 19<span>th</span>, 2012</time>
+<time datetime="2012-10-30T15:39:00-05:00" pubdate data-updated="true">Oct 30<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><figure class='code'><figcaption><span>[latest nginx]  (latest_nginx.sh)</span> <a href='/downloads/code/latest_nginx.sh'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>bash install nginx
-</span><span class='line'>sudo apt-get update
-</span><span class='line'>sudo apt-get install python-software-properites
-</span><span class='line'>sudo add-apt-repository ppa:nginx/stable
-</span><span class='line'>sudo apt-get update
-</span><span class='line'>sudo apt-get install nginx
-</span><span class='line'>nginx -v
-</span><span class='line'>sudo service nginx start
-</span></code></pre></td></tr></table></div></figure>
+<div class="entry-content"><p>Recently, I had a need to quickly generate a large number of JPEGs. I wrote this python script to generate JPEG images with random dimensions and content, as well as uuid4 filenames:</p>
+
+<div><script src='https://gist.github.com/3861372.js'></script>
+<noscript><pre><code>import sys
+import os
+import time
+import uuid
+import random
+import signal
+import multiprocessing
+import numpy
+
+from optparse import OptionParser
+from PIL import Image
+
+processes = []
+kill_queue = multiprocessing.Queue()
+
+def launch_process(number, kill_queue, child_connection, args):
+
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+    kill_flag = False
+
+    path = args['path']
+    size = args['size']
+
+    while not kill_flag:
+        x = random.choice(range(1,size))
+        y = random.choice(range(1,size))
+        a = numpy.random.rand(x,y,3) * 255 
+        image_out = Image.fromarray(a.astype('uint8')).convert('RGBA')
+        file_name = os.path.join(path, '%s.%s' % (str(uuid.uuid4()), 'jpg'))
+        image_out.save(file_name)
+        print '%s: Saved %s %s x %s' % (number, file_name, x, y)
+        if not kill_queue.empty():
+            kill_flag = kill_queue.get()
+            print '%s: Got %s from the queue.' % (number, kill_flag)
+    return
+
+def signal_handler(signal, frame):
+
+    print '\nCaught interrupt, cleaning up...'
+    for process in processes:
+        kill_queue.put(True)
+
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+if __name__ == '__main__':
+
+    parser = OptionParser()
+    parser.add_option('-p', '--path', dest='path')
+    parser.add_option('-c', '--concurrency', dest='concurrency')
+    parser.add_option('-s', '--size', dest='size')
+    (options, args) = parser.parse_args()
+
+    path = os.path.abspath(options.path)
+    concurrency = int(options.concurrency)
+    size = int(options.size)
+
+    parent_connections = []
+
+    args = {}
+    args['path'] = path
+    args['size'] = size
+
+    for number in range(concurrency):
+        parent_connection, child_connection = multiprocessing.Pipe()
+        parent_connections.append(parent_connection)
+        process = multiprocessing.Process(target=launch_process, args=(number,kill_queue,child_connection,args,))
+        process.start()
+        processes.append(process)
+
+    while(1):
+        print 'Main process sleeping...'
+        time.sleep(1)
+
+    print 'Main thread done.'
+</code></pre></noscript></div>
 
 
 
@@ -159,7 +209,7 @@ sudo &hellip;">
   
 
 
-<time datetime="2012-01-19T12:46:00-06:00" pubdate data-updated="true">Jan 19<span>th</span>, 2012</time>
+<time datetime="2012-10-30T15:39:00-05:00" pubdate data-updated="true">Oct 30<span>th</span>, 2012</time>
       
 
 
@@ -167,7 +217,7 @@ sudo &hellip;">
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/" data-via="" data-counturl="http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://clayrichardson.me/log/2012/10/30/create-jpegs-with-random-content-using-python-multiprocessing/" data-via="" data-counturl="http://clayrichardson.me/log/2012/10/30/create-jpegs-with-random-content-using-python-multiprocessing/" >Tweet</a>
   
   
   
@@ -176,8 +226,10 @@ sudo &hellip;">
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/log/2012/08/15/python-multiprocessing-queues-and-pipes/" title="Previous Post: Python multiprocessing queues and pipes">&laquo; Python multiprocessing queues and pipes</a>
       
-        <a class="basic-alignment right" href="/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/" title="Next Post: TI LaunchPad development on Ubuntu 11.10">TI LaunchPad development on Ubuntu 11.10 &raquo;</a>
+      
+        <a class="basic-alignment right" href="/log/2013/03/29/brew-install-all-available-aws-tools/" title="Next Post: Brew install all available AWS tools">Brew install all available AWS tools &raquo;</a>
       
     </p>
   </footer>
@@ -243,8 +295,8 @@ sudo &hellip;">
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/';
-        var disqus_url = 'http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/';
+        var disqus_identifier = 'http://clayrichardson.me/log/2012/10/30/create-jpegs-with-random-content-using-python-multiprocessing/';
+        var disqus_url = 'http://clayrichardson.me/log/2012/10/30/create-jpegs-with-random-content-using-python-multiprocessing/';
         var disqus_script = 'embed.js';
       
     (function () {

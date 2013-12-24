@@ -5,23 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>How to Get Latest Stable Version of Nginx on Ubuntu - //clay richardson</title>
+  <title>Python Multiprocessing Queues and Pipes - //clay richardson</title>
   <meta name="author" content="clay richardson">
 
   
-  <meta name="description" content="[latest nginx] (latest_nginx.sh) download
-1
-2
-3
-4
-5
-6
-7
-8
-bash install nginx
-sudo apt-get update
-sudo apt-get install python-software-properites
-sudo &hellip;">
+  <meta name="description" content="I&rsquo;m currently working on something that requires the use of parallel processing, so I decided to write a sample implementation to become &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -30,7 +18,7 @@ sudo &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu">
+  <link rel="canonical" href="http://clayrichardson.me/log/2012/08/15/python-multiprocessing-queues-and-pipes">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="//clay richardson" type="application/atom+xml">
@@ -93,7 +81,7 @@ sudo &hellip;">
   
   <header>
     
-      <h1 class="entry-title">How to Get Latest Stable Version of Nginx on Ubuntu</h1>
+      <h1 class="entry-title">Python Multiprocessing Queues and Pipes</h1>
     
     
       <p class="meta">
@@ -109,31 +97,93 @@ sudo &hellip;">
   
 
 
-<time datetime="2012-01-19T12:46:00-06:00" pubdate data-updated="true">Jan 19<span>th</span>, 2012</time>
+<time datetime="2012-08-15T04:19:00-05:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><figure class='code'><figcaption><span>[latest nginx]  (latest_nginx.sh)</span> <a href='/downloads/code/latest_nginx.sh'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>bash install nginx
-</span><span class='line'>sudo apt-get update
-</span><span class='line'>sudo apt-get install python-software-properites
-</span><span class='line'>sudo add-apt-repository ppa:nginx/stable
-</span><span class='line'>sudo apt-get update
-</span><span class='line'>sudo apt-get install nginx
-</span><span class='line'>nginx -v
-</span><span class='line'>sudo service nginx start
-</span></code></pre></td></tr></table></div></figure>
+<div class="entry-content"><p>I&rsquo;m currently working on something that requires the use of parallel processing, so I decided to write a sample implementation to become familiar with <a href="http://docs.python.org/library/multiprocessing.html">Python&rsquo;s Multiprocessing module</a>.</p>
+
+<div><script src='https://gist.github.com/3358585.js'></script>
+<noscript><pre><code>import sys
+import time
+import random
+import signal
+import multiprocessing
+
+processes = []
+
+def launch_process(number, kill_queue, child_connection):
+
+    kill_flag = False
+
+    while not kill_flag:
+        while child_connection.poll():
+            print 'Process %s received message: %s' % (number, child_connection.recv())
+        child_connection.send('Process %s sending message to parent' % number)
+        sleep_time = random.choice(range(5))
+        print 'Thread %s, checking in... sleep: %s' % (number, sleep_time)
+        time.sleep(sleep_time)
+        if not kill_queue.empty():
+            kill_flag = kill_queue.get()
+            print 'Got %s from the queue.' % kill_flag
+    return
+
+def signal_handler(signal, frame):
+
+    print '\nCaught interrupt, cleaning up...'
+    for process in processes:
+        print process.terminate()
+
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+if __name__ == '__main__':
+
+    parent_connections = []
+    kill_queue = multiprocessing.Queue()
+
+    for number in range(5):
+        parent_connection, child_connection = multiprocessing.Pipe()
+        parent_connections.append(parent_connection)
+        process = multiprocessing.Process(target=launch_process, args=(number,kill_queue,child_connection,))
+        process.start()
+        processes.append(process)
+
+    for number in range(10):
+        print 'Main process sleeping: %s...' % number
+        time.sleep(1)
+
+    for number, parent_connection in enumerate(parent_connections):
+        parent_connection.send('Parent sending message to child %s' % number)
+
+    print 'Done with incremental messages.'
+    for number in range(10):
+        print 'Main process sleeping: %s...' %number
+        time.sleep(1)
+
+    for number in range(10):
+        child = random.choice(range(len(parent_connections)))
+        parent_connections[child].send('Parent sending message to child %s' % child)
+
+    for number in range(10):
+        for parent_connection in parent_connections:
+            while parent_connection.poll():
+                print 'Parent thread received message: %s' % parent_connection.recv()
+        print 'All messages processed, sleeping for 1 second before polling again.'
+        time.sleep(1)
+
+    for process in processes:
+        kill_queue.put(True)
+    
+    for process in processes:
+        process.join()
+
+    print 'Main thread done.'
+</code></pre></noscript></div>
 
 
 
@@ -159,7 +209,7 @@ sudo &hellip;">
   
 
 
-<time datetime="2012-01-19T12:46:00-06:00" pubdate data-updated="true">Jan 19<span>th</span>, 2012</time>
+<time datetime="2012-08-15T04:19:00-05:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
       
 
 
@@ -167,7 +217,7 @@ sudo &hellip;">
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/" data-via="" data-counturl="http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://clayrichardson.me/log/2012/08/15/python-multiprocessing-queues-and-pipes/" data-via="" data-counturl="http://clayrichardson.me/log/2012/08/15/python-multiprocessing-queues-and-pipes/" >Tweet</a>
   
   
   
@@ -176,8 +226,10 @@ sudo &hellip;">
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/" title="Previous Post: TI LaunchPad development on Ubuntu 11.10 running in VirtualBox">&laquo; TI LaunchPad development on Ubuntu 11.10 running in VirtualBox</a>
       
-        <a class="basic-alignment right" href="/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/" title="Next Post: TI LaunchPad development on Ubuntu 11.10">TI LaunchPad development on Ubuntu 11.10 &raquo;</a>
+      
+        <a class="basic-alignment right" href="/log/2012/10/30/create-jpegs-with-random-content-using-python-multiprocessing/" title="Next Post: Create JPEGs with random content using Python multiprocessing">Create JPEGs with random content using Python multiprocessing &raquo;</a>
       
     </p>
   </footer>
@@ -243,8 +295,8 @@ sudo &hellip;">
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/';
-        var disqus_url = 'http://clayrichardson.me/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/';
+        var disqus_identifier = 'http://clayrichardson.me/log/2012/08/15/python-multiprocessing-queues-and-pipes/';
+        var disqus_url = 'http://clayrichardson.me/log/2012/08/15/python-multiprocessing-queues-and-pipes/';
         var disqus_script = 'embed.js';
       
     (function () {
