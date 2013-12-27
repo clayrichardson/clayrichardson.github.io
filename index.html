@@ -9,8 +9,9 @@
   <meta name="author" content="clay richardson">
 
   
-  <meta name="description" content="I have an encrypted 1TB portable hard drive, and I wanted to use that as a Time Machine backup. TL;DR: 1
-$ sudo tmutil setdestination /Volumes/TC\ &hellip;">
+  <meta name="description" content="I needed to autocrop a bunch of handwritten 14.8cm x 21cm notes I scanned.
+This requires ImageMagick: 1
+brew install imagemagick Use the convert &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +79,55 @@ $ sudo tmutil setdestination /Volumes/TC\ &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/log/2013/12/27/imagemagick-autocrop-scanned-documents/">ImageMagick Autocrop Scanned Documents</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-27T03:09:55-06:00" pubdate data-updated="true">Dec 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I needed to autocrop a bunch of handwritten 14.8cm x 21cm notes I scanned.
+This requires ImageMagick:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew install imagemagick</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Use the convert command:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>convert ./*.png -fuzz 1% -trim +repage -set filename:f "$(date)-%f" "./CroppedScans/Cropped-%[filename:f]"</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -581,6 +631,10 @@ Following the link to the <a href="http://sourceforge.net/apps/mediawiki/mspgcc/
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/log/2013/12/27/imagemagick-autocrop-scanned-documents/">ImageMagick Autocrop Scanned Documents</a>
+      </li>
+    
+      <li class="post">
         <a href="/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume/">Configure Time Machine to Save Backups to a TrueCrypt Volume</a>
       </li>
     
@@ -594,10 +648,6 @@ Following the link to the <a href="http://sourceforge.net/apps/mediawiki/mspgcc/
     
       <li class="post">
         <a href="/log/2012/08/15/python-multiprocessing-queues-and-pipes/">Python Multiprocessing Queues and Pipes</a>
-      </li>
-    
-      <li class="post">
-        <a href="/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/">TI LaunchPad Development on Ubuntu 11.10 Running in VirtualBox</a>
       </li>
     
   </ul>
