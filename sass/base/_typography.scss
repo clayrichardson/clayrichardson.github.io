@@ -14,22 +14,29 @@ $header-subtitle-font-family: $heading-font-family !default;
 .serif { font-family: $serif; }
 .mono { font-family: $mono; }
 
+$font1: "Roboto Slab";
+$font2: "Oswald";
+$font3: "Ubuntu";
+
+.font1 { font-family: "Roboto Slab"; }
+.font2 { font-family: "Oswald"; }
+.font3 { font-family: "Ubuntu"; }
+
 body > header h1 {
   font-size: 2.2em;
-  @extend .heading;
-  font-family: $header-title-font-family;
+  @extend .font1;
   font-weight: normal;
   line-height: 1.2em;
   margin-bottom: 0.6667em;
 }
 body > header h2 {
-  font-family: $header-subtitle-font-family;
+  @extend .font2;
 }
 
 body {
   line-height: 1.5em;
   color: $text-color;
-  @extend .serif;
+  @extend .font3;
 }
 h1 {
   font-size: 2.2em;
@@ -42,10 +49,9 @@ h1 {
 }
 
 #{headings()}{
-  @extend .heading;
+  @extend .font2;
   text-rendering: optimizelegibility;
   margin-bottom: 1em;
-  font-weight: bold;
 }
 h2, section h1 {
   font-size: 1.5em;
