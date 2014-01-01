@@ -1,0 +1,918 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TI LaunchPad Development on Ubuntu 11.10 Running in VirtualBox - //clay richardson</title>
+  <meta name="author" content="clay richardson">
+
+  
+  <meta name="description" content="In my previous post, I was having trouble debugging and writing the binary files to the TI LaunchPad from Ubuntu 11.10 running in VirtualBox on Mac &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://clayrichardson.me/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="//clay richardson" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46624039-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">//clay richardson</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:clayrichardson.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">log</a></li>
+  <li><a href="/pgp">pgp</a></li>
+  <li><a href="/about">about</a></li>
+  <li><a href="/log/archives">archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">TI LaunchPad Development on Ubuntu 11.10 Running in VirtualBox</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T02:45:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In my previous post, I was having trouble debugging and writing the binary files to the <a href="http://www.ti.com/launchpad">TI LaunchPad</a> from Ubuntu 11.10 running in <a href="https://www.virtualbox.org/">VirtualBox</a> on Mac OS X Lion. I also tried using the VirtualBox ExtensionPack with USB 2.0 support to no avail.</p>
+
+<p>This is an extension of the <a href="http://clayrichardson.me/2012/03/15/ti-launchpad-development-on-ubuntu-11-10/">previous post</a> if you&rsquo;re running Ubuntu 11.10 in VirtualBox 4.1.10 on OS X Lion.</p>
+
+<p>So I&rsquo;ve figured out how to program and debug the Launchpad from within the guest OS. Albeit with a couple of caveats:</p>
+
+<ol>
+<li>The driver from <a href="http://code.google.com/p/osx-launchpad/">osx-launchpad</a> will need to be installed on the host OS.</li>
+<li>You have to use remote debugging via the GDB remote stub that mspdebug creates.</li>
+<li>When you use &ldquo;target remote&rdquo; from msp430-gdb, it will segfault, yeay!</li>
+<li>There will be some compiling from source to avoid the segfault party.</li>
+</ol>
+
+
+<!-- more -->
+
+
+<h3>On OSX Lion:</h3>
+
+<p>Go to <a href="http://code.google.com/p/osx-launchpad/">http://code.google.com/p/osx-launchpad/</a> and install the LaunchPad OSX USB VCP CDC Driver. For some reason, I couldn&rsquo;t get <a href="http://e2e.ti.com/support/interface/digital_interface/m/videos__files/198722.aspx">TI&rsquo;s driver</a> working. Restart, and the LaunchPad should be recognized and properly connected.</p>
+
+<p>Clone the <a href="http://mspdebug.sourceforge.net/">mspdebug</a> source into your sources directory:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://mspdebug.git.sourceforge.net/gitroot/mspdebug/mspdebug</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Compile the code:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ./mspdebug
+</span><span class='line'>make 2&gt;&1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll get a couple of warnings, but it the binary should now be there. I usually use brew on OS X or <a href="http://en.wikipedia.org/wiki/CheckInstall">CheckInstall</a> on Linux when I have to install from source, as I don&rsquo;t want to lose track of files littered through my systems. Clutter is bad. The brew formula for mspdebug wouldn&rsquo;t work properly, so I&rsquo;ve resorted to compiling from source, and editing the makefile for installation.</p>
+
+<p>Change line 21 of ./Makefile from:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PREFIX ?= /usr/local</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PREFIX ?= /usr/from_source</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can make yours whatever you want, I just figured /usr/from_source would be a good place.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo mkdir /usr/from_source</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, when you do a:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>make install</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The files will be moved into /usr/from_source</p>
+
+<p>Add /usr/from_source/bin to the /etc/paths file so you&rsquo;ll be able to execute it easily.</p>
+
+<p>Reload the environment:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mspdebug rf2500
+</span><span class='line'>MSPDebug version 0.19 - debugging tool for MSP430 MCUs
+</span><span class='line'>Copyright (C) 2009-2012 Daniel Beer
+</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
+</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</span><span class='line'>
+</span><span class='line'>Trying to open interface 1 on 008
+</span><span class='line'>Initializing FET...
+</span><span class='line'>FET protocol version is 30001000
+</span><span class='line'>Configured for Spy-Bi-Wire
+</span><span class='line'>Set Vcc: 3000 mV
+</span><span class='line'>fet: FET returned error code 4 (Could not find device (or device not supported))
+</span><span class='line'>fet: command C_IDENT1 failed
+</span><span class='line'>fet: identify failed
+</span><span class='line'>Trying again...
+</span><span class='line'>Initializing FET...
+</span><span class='line'>FET protocol version is 30001000
+</span><span class='line'>Configured for Spy-Bi-Wire
+</span><span class='line'>Sending reset...
+</span><span class='line'>Set Vcc: 3000 mV
+</span><span class='line'>Device ID: 0xf201
+</span><span class='line'>  Code start address: 0xf800
+</span><span class='line'>  Code size         : 2048 byte = 2 kb
+</span><span class='line'>  RAM  start address: 0x200
+</span><span class='line'>  RAM  end   address: 0x27f
+</span><span class='line'>  RAM  size         : 128 byte = 0 kb
+</span><span class='line'>Device: MSP430F2012
+</span><span class='line'>Code memory starts at 0xf800
+</span><span class='line'>Number of breakpoints: 2
+</span><span class='line'>
+</span><span class='line'>Available commands:
+</span><span class='line'>    =         delbreak  gdb       load      opt       reset     simio
+</span><span class='line'>    alias     dis       help      locka     prog      run       step
+</span><span class='line'>    break     erase     hexout    md        read      set       sym
+</span><span class='line'>    cgraph    exit      isearch   mw        regs      setbreak
+</span><span class='line'>
+</span><span class='line'>Available options:
+</span><span class='line'>    color           gdb_loop        iradix
+</span><span class='line'>    fet_block_size  gdbc_xfer_size  quiet
+</span><span class='line'>
+</span><span class='line'>Type "help " for more information.
+</span><span class='line'>Press Ctrl+D to quit.
+</span><span class='line'>
+</span><span class='line'>(mspdebug)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Awesome, let&rsquo;s move on to the next step!</p>
+
+<h3>On the Ubuntu 11.10 guest VM:</h3>
+
+<p>A bunch of searching led me to <a href="https://bugs.launchpad.net/ubuntu/+source/gdb-msp430/+bug/891970">this bug on Launchpad</a> where <a href="https://launchpad.net/~andyhelp+ubuntu">Andrzej Bieniek (andyhelp+ubuntu)</a> mentioned that compiling from <a href="ftp://ftp.gnu.org/pub/gnu/gdb/">7.2a</a> resulted in no errors, so I figured I&rsquo;d might as well try that.</p>
+
+<p>You&rsquo;ll need these packages installed in order to build GDB:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get install texinfo libncurses5-dev zlib1g-dev</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Otherwise, you&rsquo;ll get errors like these:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>WARNING: `makeinfo' is missing on your system.
+</span><span class='line'>configure: error: no termcap library found
+</span><span class='line'>/usr/bin/ld: cannot find -lz</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Clone the <a href="http://sourceforge.net/projects/mspgcc/">mspgcc project</a> into your sources directory: (~/sources/git/)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://mspgcc.git.sourceforge.net/gitroot/mspgcc/mspgcc</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This project contains the patches you&rsquo;ll need to build the toolchain from source. In this case, we&rsquo;ll only be needing: msp430-gdb-7.2a-20111205.patch</p>
+
+<p>Download GDB 7.2 source and extract it:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget ftp://ftp.gnu.org/pub/gnu/gdb/gdb-7.2a.tar.bz2
+</span><span class='line'>tar -xvpjf ./gdb-7.2a.tar.bz2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>cd into the directory:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ./gdb-7.2/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Looking at the instructions in the patch file:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>vim ../mspgcc/msp430-gdb-7.2a-20111205.patch</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can see:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>tar xjf gdb-7.2a.tar.bz2
+</span><span class='line'>( cd gdb-7.2 ; patch -p1 &lt; ../msp430-gdb-7.2a-20111205.patch )
+</span><span class='line'>mkdir -p BUILD/gdb
+</span><span class='line'>cd BUILD/gdb
+</span><span class='line'>../../gdb-7.2/configure \
+</span><span class='line'>--target=msp430 \
+</span><span class='line'>--prefix=/usr/local/msp430 \
+</span><span class='line'>2&gt;&1 | tee co
+</span><span class='line'>make 2&gt;&1 | tee mo
+</span><span class='line'>make install 2&gt;&1 | tee moi</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But we&rsquo;re only going to follow some of the instructions.</p>
+
+<p>Patch the files:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>patch -p1 &lt; ../mspgcc/msp430-gdb-7.2a-20111205.patch</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll see a bunch of &lsquo;patching file x&rsquo; messages scroll by. Awesome, you&rsquo;ve patched it. Make the necessary directories:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mkdir -p BUILD/gdb cd BUILD/gdb</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Configure:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>../../configure --target=msp430 --prefix=/usr/local/msp430 2&gt;&1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you&rsquo;re on a multicore machine, you can specify -j [number of cores] to compile multiple files simultaneously:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>make -j4 2&gt;&1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Otherwise, just leave the -j switch out:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>make 2&gt;&1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once that is done, find where the msp430-gdb executable is:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ which msp430-gdb
+</span><span class='line'>/usr/bin/msp430-gdb</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Replace the executable:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo cp ./gdb/gdb /usr/bin/msp430-gdb</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If all is well, you should be able to run it:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ msp430-gdb
+</span><span class='line'>GNU gdb (GDB) 7.2
+</span><span class='line'>Copyright (C) 2010 Free Software Foundation, Inc.
+</span><span class='line'>License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+</span><span class='line'>This is free software: you are free to change and redistribute it.
+</span><span class='line'>There is NO WARRANTY, to the extent permitted by law. Type "show copying"
+</span><span class='line'>and "show warranty" for details.
+</span><span class='line'>This GDB was configured as "--host=i686-pc-linux-gnu --target=msp430".
+</span><span class='line'>For bug reporting instructions, please see:
+</span><span class='line'>&lt;http://www.gnu.org/software/gdb/bugs/&gt;.
+</span><span class='line'>(gdb)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Press <a href="http://en.wikipedia.org/wiki/End-of-transmission_character">Ctrl+D</a> to send an <a href="http://en.wikipedia.org/wiki/End-of-file">EOF</a> and quit gdb.</p>
+
+<p>Great, so we&rsquo;ve got both sides of the puzzle working. Let&rsquo;s put them together!</p>
+
+<h3>On OSX Lion:</h3>
+
+<p>mspdebug has this cool thing where it can act as a <a href="http://davis.lbl.gov/Manuals/GDB/gdb_17.html#SEC140">GDB remote stub</a>.</p>
+
+<p>From the <a href="http://mspdebug.sourceforge.net/manual.html">mspdebug manual</a>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gdb [port]
+</span><span class='line'>  Start  a  GDB  remote  stub, optionally specifying a TCP port to
+</span><span class='line'>  listen on.  If no port is given, the default port is 2000.
+</span><span class='line'>
+</span><span class='line'>  MSPDebug will wait for a connection on this port, and  then  act
+</span><span class='line'>  as a GDB remote stub until GDB disconnects.
+</span><span class='line'>
+</span><span class='line'>  GDB's  "monitor"  command can be used to issue MSPDebug commands
+</span><span class='line'>  via the GDB interface. Supplied commands are executed non-inter-
+</span><span class='line'>  actively, and the output is sent back to be displayed in GDB.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So start mspdebug on port 2000 (default if no port is specified):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mspdebug rf2500 gdb 2000</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You should see something similar to:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mspdebug rf2500 gdb 2000
+</span><span class='line'>MSPDebug version 0.19 - debugging tool for MSP430 MCUs
+</span><span class='line'>Copyright (C) 2009-2012 Daniel Beer &lt;dlbeer@gmail.com&gt;
+</span><span class='line'>This is free software; see the source for copying conditions. There is NO
+</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</span><span class='line'>Trying to open interface 1 on 008
+</span><span class='line'>Initializing FET...
+</span><span class='line'>FET protocol version is 30001000
+</span><span class='line'>Configured for Spy-Bi-Wire
+</span><span class='line'>Set Vcc: 3000 mV
+</span><span class='line'>fet: FET returned error code 4 (Could not find device (or device not supported))
+</span><span class='line'>fet: command C_IDENT1 failed
+</span><span class='line'>fet: identify failed
+</span><span class='line'>Trying again...
+</span><span class='line'>Initializing FET...
+</span><span class='line'>FET protocol version is 30001000
+</span><span class='line'>Configured for Spy-Bi-Wire
+</span><span class='line'>Sending reset...
+</span><span class='line'>Set Vcc: 3000 mV
+</span><span class='line'>Device ID: 0xf201
+</span><span class='line'> Code start address: 0xf800
+</span><span class='line'> Code size : 2048 byte = 2 kb
+</span><span class='line'> RAM start address: 0x200
+</span><span class='line'> RAM end address: 0x27f
+</span><span class='line'> RAM size : 128 byte = 0 kb
+</span><span class='line'>Device: MSP430F2012
+</span><span class='line'>Code memory starts at 0xf800
+</span><span class='line'>Number of breakpoints: 2
+</span><span class='line'>Bound to port 2000. Now waiting for connection...</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>On the Ubuntu 11.10 guest VM:</h3>
+
+<p>To be able to talk to the LaunchPad, we have to connect to the host machine on whatever port was specified when starting mspdebug.
+From the <a href="http://mspdebug.sourceforge.net/manual.html">mspdebug manual</a>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gdbc
+</span><span class='line'>  GDB  client  mode.  Connect to a server which implements the GDB
+</span><span class='line'>  remote protocol and provide an interface  to  it.  To  use  this
+</span><span class='line'>  driver, specify the remote address in hostname:port format using
+</span><span class='line'>  the -d option.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To do this when networking is configured as NAT, we need to find the default gateway:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>route</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You should see something similar to:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ route
+</span><span class='line'>Kernel IP routing table
+</span><span class='line'>Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+</span><span class='line'>default         10.0.2.2        0.0.0.0         UG    0      0        0 eth0
+</span><span class='line'>10.0.2.0        *               255.255.255.0   U     1      0        0 eth0
+</span><span class='line'>link-local      *               255.255.0.0     U     1000   0        0 eth0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&rsquo;re interested in the line that begins with &lsquo;default&rsquo;.
+Start mspdebug with the gbdc driver:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mspdebug gdbc -d 10.0.2.2:2000
+</span><span class='line'>MSPDebug version 0.16 - debugging tool for MSP430 MCUs
+</span><span class='line'>Copyright (C) 2009-2011 Daniel Beer
+</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
+</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</span><span class='line'>
+</span><span class='line'>Looking up 10.0.2.2...
+</span><span class='line'>Connecting to 10.0.2.2:2000...
+</span><span class='line'>
+</span><span class='line'>Available commands:
+</span><span class='line'>    =         delbreak  gdb       load      opt       reset     simio
+</span><span class='line'>    alias     dis       help      locka     prog      run       step
+</span><span class='line'>    break     erase     hexout    md        read      set       sym
+</span><span class='line'>    cgraph    exit      isearch   mw        regs      setbreak
+</span><span class='line'>
+</span><span class='line'>Available options:
+</span><span class='line'>    color           gdb_loop        iradix
+</span><span class='line'>    fet_block_size  gdbc_xfer_size  quiet
+</span><span class='line'>
+</span><span class='line'>Type "help " for more information.
+</span><span class='line'>Press Ctrl+D to quit.
+</span><span class='line'>
+</span><span class='line'>(mspdebug)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sweet action, we&rsquo;ve connected to our LaunchPad through the network! You can now do everything just like normal.
+For debugging, start msp430-gdb:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>msp430-gdb</span></code></pre></td></tr></table></div></figure>
+
+
+<p>At the prompt enter:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(gdb) target remote 10.0.2.2:2000</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can now do all the regular GDB stuff.
+If you&rsquo;ve got a better way of going about this, I&rsquo;d love to hear it!</p>
+
+<h3>Automation:</h3>
+
+<p>It can be quite annoying to leave the VM and reconnect mspdebug to the LaunchPad from the host, so I&rsquo;ve got a little script that will wait 1 second before reconnecting, so you&rsquo;ll be able to kill it with Ctrl + C</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/bash
+</span><span class='line'>
+</span><span class='line'>while [ 1 ]
+</span><span class='line'>do
+</span><span class='line'>    mspdebug rf2500 gdb 2000
+</span><span class='line'>    sleep 1
+</span><span class='line'>done</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I saved it as /usr/from_source/bin/tilaunchpad right next to the mspdebug binary. You can stay constantly connected to it through mspdebug or msp430-gdb and type &lsquo;run&rsquo; or &lsquo;continue&rsquo; to execute like normal.</p>
+
+<p>Happy Hacking!</p>
+
+<h3>Appendix:</h3>
+
+<p>Here is what syslog output looks like when connected directly to the VM:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Mar 16 17:07:57 linux kernel: [ 318.149193] usb 2-2: new full speed USB device number 7 using ohci_hcd
+</span><span class='line'>Mar 16 17:08:12 linux kernel: [ 333.296388] usb 2-2: device descriptor read/64, error -110
+</span><span class='line'>Mar 16 17:08:27 linux kernel: [ 348.565460] usb 2-2: device descriptor read/64, error -110
+</span><span class='line'>Mar 16 17:08:28 linux kernel: [ 348.804490] usb 2-2: new full speed USB device number 8 using ohci_hcd
+</span><span class='line'>Mar 16 17:08:43 linux kernel: [ 363.952590] usb 2-2: device descriptor read/64, error -110
+</span><span class='line'>Mar 16 17:08:58 linux kernel: [ 379.225328] usb 2-2: device descriptor read/64, error -110
+</span><span class='line'>Mar 16 17:08:58 linux kernel: [ 379.464388] usb 2-2: new full speed USB device number 9 using ohci_hcd
+</span><span class='line'>Mar 16 17:09:03 linux kernel: [ 384.499668] usb 2-2: device descriptor read/8, error -110
+</span><span class='line'>Mar 16 17:09:09 linux kernel: [ 389.617160] usb 2-2: device descriptor read/8, error -110
+</span><span class='line'>Mar 16 17:09:09 linux kernel: [ 389.856417] usb 2-2: new full speed USB device number 10 using ohci_hcd
+</span><span class='line'>Mar 16 17:09:14 linux kernel: [ 394.903343] usb 2-2: device descriptor read/8, error -110
+</span><span class='line'>Mar 16 17:09:19 linux kernel: [ 400.022096] usb 2-2: device descriptor read/8, error -110
+</span><span class='line'>Mar 16 17:09:19 linux kernel: [ 400.124228] hub 2-0:1.0: unable to enumerate USB device on port 2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here is what mspdebug said after the enumeration failure:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo ./mspdebug rf2500
+</span><span class='line'>MSPDebug version 0.19 - debugging tool for MSP430 MCUs
+</span><span class='line'>Copyright (C) 2009-2012 Daniel Beer
+</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
+</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</span><span class='line'>
+</span><span class='line'>usbutil: unable to find a device matching 0451:f432</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I can&rsquo;t remember what I did to get it to show up: (I&rsquo;ll post an update if I do)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Mar 16 17:28:09 linux kernel: [  532.781053] usb 1-2: new full speed USB device number 5 using ohci_hcd
+</span><span class='line'>Mar 16 17:28:09 linux mtp-probe: checking bus 1, device 5: "/sys/devices/pci0000:00/0000:00:06.0/usb1/1-2"
+</span><span class='line'>Mar 16 17:28:09 linux kernel: [  533.090225] cdc_acm 1-2:1.0: This device cannot do calls on its own. It is not a modem.
+</span><span class='line'>Mar 16 17:28:09 linux kernel: [  533.090232] cdc_acm 1-2:1.0: No union descriptor, testing for castrated device
+</span><span class='line'>Mar 16 17:28:09 linux kernel: [  533.090255] cdc_acm 1-2:1.0: ttyACM0: USB ACM device
+</span><span class='line'>Mar 16 17:28:19 linux kernel: [  543.174047] generic-usb 0003:0451:F432.0004: usb_submit_urb(ctrl) failed
+</span><span class='line'>Mar 16 17:28:19 linux kernel: [  543.174114] generic-usb 0003:0451:F432.0004: timeout initializing reports
+</span><span class='line'>Mar 16 17:28:19 linux kernel: [  543.174276] generic-usb 0003:0451:F432.0004: hiddev0,hidraw1: USB HID v1.01 Device [Texas Instruments Texas Instruments MSP-FET430UIF] on usb-0000:00:06.0-2/input1
+</span><span class='line'>Mar 16 17:28:20 linux mtp-probe: bus: 1, device: 5 was not an MTP device
+</span><span class='line'>Mar 16 17:28:20 linux kernel: [  544.173466] usb 1-2: usbfs: USBDEVFS_CONTROL failed cmd mtp-probe rqt 128 rq 6 len 255 ret -110</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once the LaunchPad showed up in /dev/ttyACM0 here&rsquo;s the mspdebug output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo ./mspdebug rf2500
+</span><span class='line'>MSPDebug version 0.19 - debugging tool for MSP430 MCUs
+</span><span class='line'>Copyright (C) 2009-2012 Daniel Beer
+</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
+</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</span><span class='line'>
+</span><span class='line'>Trying to open interface 1 on 003
+</span><span class='line'>rf2500: warning: can't detach kernel driver: No data available
+</span><span class='line'>Initializing FET...
+</span><span class='line'>rf2500: can't send data: Resource temporarily unavailable
+</span><span class='line'>fet: open failed
+</span><span class='line'>Trying again...
+</span><span class='line'>Initializing FET...
+</span><span class='line'>rf2500: can't send data: Resource temporarily unavailable
+</span><span class='line'>fet: open failed</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here&rsquo;s the segfault using msp430-gdb from the repository:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ msp430-gdb
+</span><span class='line'>GNU gdb (Linaro GDB) 7.3
+</span><span class='line'>Copyright (C) 2011 Free Software Foundation, Inc.
+</span><span class='line'>License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+</span><span class='line'>This is free software: you are free to change and redistribute it.
+</span><span class='line'>There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+</span><span class='line'>and "show warranty" for details.
+</span><span class='line'>This GDB was configured as "--host=x86_64-linux-gnu --target=msp430".
+</span><span class='line'>For bug reporting instructions, please see:
+</span><span class='line'>&lt;http://bugs.launchpad.net/gdb-linaro/&gt;.
+</span><span class='line'>(gdb) target remote 10.0.2.2:2000
+</span><span class='line'>Remote debugging using 10.0.2.2:2000
+</span><span class='line'>Segmentation fault</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">clay richardson</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T02:45:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://clayrichardson.me/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/" data-via="" data-counturl="http://clayrichardson.me/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/" title="Previous Post: TI LaunchPad development on Ubuntu 11.10">&laquo; TI LaunchPad development on Ubuntu 11.10</a>
+      
+      
+        <a class="basic-alignment right" href="/log/2012/08/15/python-multiprocessing-queues-and-pipes/" title="Next Post: Python multiprocessing queues and pipes">Python multiprocessing queues and pipes &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/log/2013/12/27/imagemagick-autocrop-scanned-documents/">ImageMagick Autocrop Scanned Documents</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume/">Configure Time Machine to Save Backups to a TrueCrypt Volume</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2013/03/29/brew-install-all-available-aws-tools/">Brew Install All Available AWS Tools</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2012/10/30/create-jpegs-with-random-content-using-python-multiprocessing/">Create JPEGs With Random Content Using Python Multiprocessing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2012/08/15/python-multiprocessing-queues-and-pipes/">Python Multiprocessing Queues and Pipes</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - clay richardson -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'clayrichardson';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://clayrichardson.me/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/';
+        var disqus_url = 'http://clayrichardson.me/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

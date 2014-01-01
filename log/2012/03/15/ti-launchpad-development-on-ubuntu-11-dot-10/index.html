@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TI LaunchPad Development on Ubuntu 11.10 - //clay richardson</title>
+  <meta name="author" content="clay richardson">
+
+  
+  <meta name="description" content="I got my hands on a couple of TI LaunchPads and was surprised there is no official support for Linux. Sad day. Regardless, at $4.30 each + shipping, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://clayrichardson.me/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="//clay richardson" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46624039-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">//clay richardson</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:clayrichardson.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">log</a></li>
+  <li><a href="/pgp">pgp</a></li>
+  <li><a href="/about">about</a></li>
+  <li><a href="/log/archives">archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">TI LaunchPad Development on Ubuntu 11.10</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-15T16:43:00-05:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I got my hands on a couple of <a href="http://www.ti.com/launchpad">TI LaunchPads</a> and was surprised there is no official support for Linux. Sad day. Regardless, at $4.30 each + shipping, they&rsquo;re a steal.</p>
+
+<p>Interested in getting development running on Ubuntu, I was reading <a href="http://hackaday.com/2010/08/11/how-to-launchpad-programming-with-linux/">Hack A Day&rsquo;s LaunchPad on Ubuntu article</a> until I got to the <a href="http://mspgcc4.sourceforge.net/">mspgcc4 project page</a> and noticed</p>
+
+<blockquote><p>mspgcc4 is no longer supported. All contributions have been incorporated into <a href="http://sourceforge.net/projects/mspgcc/">mspgcc</a>, which has newer versions of all components.
+Following the link to the <a href="http://sourceforge.net/apps/mediawiki/mspgcc/index.php?title=MSPGCC_Wiki">GCC toolchain for MSP430 web site</a>, you&rsquo;ll find install instructions for &ldquo;<a href="http://sourceforge.net/apps/mediawiki/mspgcc/index.php?title=Install:debian">Ubuntu</a> and other Debian-derived distributions&rdquo; which will tell you &ldquo;mspgcc will be available in Ubuntu Oneiric. Packages are listed <a href="https://launchpad.net/ubuntu/oneiric/+search?text=msp430">here</a>, and were shepherded by Luca Bruno.&rdquo;</p></blockquote>
+
+<p><a href="http://en.wikipedia.org/wiki/Wikipedia:Too_long;_didn't_read">tl;dr</a>: Seeing the Hack A Day article was from August of 2010, I figured I would try to go with the more updated toolchain.</p>
+
+<!-- more -->
+
+
+<p>Install the necessary packages:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get install msp430-libc mspdebug msp430mcu binutils-msp430 gcc-msp430 gdb-msp430</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will get an error:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>dpkg: error processing /var/cache/apt/archives/gdb-msp430_7.2~mspgcc-7.2-20110612-1ubuntu1_amd64.deb (--unpack):
+</span><span class='line'>trying to overwrite '/usr/share/gdb/python/gdb/__init__.py', which is also in package gdb 7.3-0ubuntu2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Substitute i386 for amd64 if you&rsquo;re running on a 32 bit system.</p>
+
+<p>There are bug reports for this <a href="https://bugs.launchpad.net/ubuntu/+source/gdb-msp430/+bug/860045">here</a>, <a href="https://bugs.launchpad.net/ubuntu/+source/gdb-msp430/+bug/868317">here</a>, and <a href="https://bugs.launchpad.net/gdb-linaro/+bug/891970/comments/7">here</a>. In the <a href="https://bugs.launchpad.net/ubuntu/+source/gdb-msp430/+bug/860045/comments/3">last comment</a> of the first linked bug report, <a href="https://launchpad.net/~mkburza">Marek Burza (mkburza)</a> wrote on 2011-11-23:</p>
+
+<blockquote><p>The package tries to overwrite:
+/usr/share/gdb/python/gdb/<strong>init</strong>.py
+/usr/share/gdb/python/gdb/types.py
+/usr/share/gdb/python/gdb/printing.py
+/usr/share/gdb/python/gdb/command/<strong>init</strong>.py
+/usr/share/gdb/python/gdb/command/pretty_printers.py</p>
+
+<p>These files are identical (in my case) to the ones already installed so to work around the problem I ran the installation with an override instead:
+<code>sudo apt-get -o Dpkg::Options::="--force-overwrite" install gdb-msp430</code></p></blockquote>
+
+<p>Let&rsquo;s see if that&rsquo;s the case. We&rsquo;ll take the md5sum of the specific files mentioned to make sure they&rsquo;re truly identical and safe to overwrite. To skip the tedious steps because you know everything, there&rsquo;s a bash one liner further down that prints each file&rsquo;s md5sum.</p>
+
+<p>First, make a directory to unpack the debian package in: (cd without specifying a directory defaults to ~/)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd
+</span><span class='line'>mkdir ./gdb-msp430</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Copy the .deb package that apt-get has downloaded to the temp directory in your home directory:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cp /var/cache/apt/archives/gdb-msp430_7.2~mspgcc-7.2-20110612-1ubuntu1_amd64.deb ~/gdb-msp430/
+</span><span class='line'>cd ./gdb-msp430/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Again, substituting i386 for amd64 if you&rsquo;re running a 32 bit system.</p>
+
+<p>Unpack it:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ar vx ./gdb-msp430_7.2~mspgcc-7.2-20110612-1ubuntu1_amd64.deb</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Untar the data.tar.gz file:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>tar -xvpzf ./data.tar.gz</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, get the md5sum of all the files in that directory:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>md5sum ./usr/share/gdb/python/gdb/*
+</span><span class='line'>md5sum /usr/share/gdb/python/gdb/*
+</span><span class='line'>md5sum ./usr/share/gdb/python/gdb/command/*
+</span><span class='line'>md5sum /usr/share/gdb/python/gdb/command/*</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You should see something like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ md5sum ./usr/share/gdb/python/gdb/*
+</span><span class='line'>md5sum: ./usr/share/gdb/python/gdb/command: Is a directory
+</span><span class='line'>7b88259f8fa8e24bbe87796a43740e4c ./usr/share/gdb/python/gdb/__init__.py
+</span><span class='line'>bbd6a17b9c37fb605ecdb5d6bdb621d0 ./usr/share/gdb/python/gdb/printing.py
+</span><span class='line'>8648e656c6d3c96fdfdee21f3d3ef149 ./usr/share/gdb/python/gdb/types.py
+</span><span class='line'>
+</span><span class='line'>$ md5sum /usr/share/gdb/python/gdb/*
+</span><span class='line'>md5sum: /usr/share/gdb/python/gdb/command: Is a directory
+</span><span class='line'>7b88259f8fa8e24bbe87796a43740e4c /usr/share/gdb/python/gdb/__init__.py
+</span><span class='line'>bbd6a17b9c37fb605ecdb5d6bdb621d0 /usr/share/gdb/python/gdb/printing.py
+</span><span class='line'>8648e656c6d3c96fdfdee21f3d3ef149 /usr/share/gdb/python/gdb/types.py
+</span><span class='line'>
+</span><span class='line'>$ md5sum ./usr/share/gdb/python/gdb/command/*
+</span><span class='line'>5c52536fb16cd5770660441d4f787928 ./usr/share/gdb/python/gdb/command/__init__.py
+</span><span class='line'>66179835aee61f2a3c948ef95363c1fc ./usr/share/gdb/python/gdb/command/pretty_printers.py
+</span><span class='line'>
+</span><span class='line'>$ md5sum /usr/share/gdb/python/gdb/command/*
+</span><span class='line'>5c52536fb16cd5770660441d4f787928 /usr/share/gdb/python/gdb/command/__init__.py
+</span><span class='line'>66179835aee61f2a3c948ef95363c1fc /usr/share/gdb/python/gdb/command/pretty_printers.py</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bash one liner-ish:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd; mkdir ./gdb-msp430; cp /var/cache/apt/archives/gdb-msp430_7.2~mspgcc-7.2-20110612-1ubuntu1_amd64.deb ~/gdb-msp430/; cd ./gdb-msp430/; ar vx ./gdb-msp430_7.2~mspgcc-7.2-20110612-1ubuntu1_amd64.deb; tar -xvpzf ./data.tar.gz; echo "package files:"; md5sum ./usr/share/gdb/python/gdb/*; echo "installed files:"; md5sum /usr/share/gdb/python/gdb/*; echo "package files:"; md5sum ./usr/share/gdb/python/gdb/command/*; echo "installed files:"; md5sum /usr/share/gdb/python/gdb/command/*; echo "Cleaning up..."; cd ../; rm -r ./gdb-msp430/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Or, if you&rsquo;re running 32 bit:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd; mkdir ./gdb-msp430; cp /var/cache/apt/archives/gdb-msp430_7.2~mspgcc-7.2-20110612-1ubuntu1_i386.deb ~/gdb-msp430/; cd ./gdb-msp430/; ar vx ./gdb-msp430_7.2~mspgcc-7.2-20110612-1ubuntu1_i386.deb; tar -xvpzf ./data.tar.gz; echo "package files:"; md5sum ./usr/share/gdb/python/gdb/*; echo "installed files:"; md5sum /usr/share/gdb/python/gdb/*; echo "package files:"; md5sum ./usr/share/gdb/python/gdb/command/*; echo "installed files:"; md5sum /usr/share/gdb/python/gdb/command/*; echo "Cleaning up..."; cd ../; rm -r ./gdb-msp430/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Well, looks like everything is identical, so now we can force an overwrite of the files:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get -o Dpkg::Options::="--force-overwrite" install gdb-msp430</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Delete the temp directory you created in your home directory to clean up:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rm -r ~/gdb-msp430/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, test the toolchain. Grab a copy of a simple blink program:</p>
+
+<p>(I usually keep my sources in ~/sources/[version control system]/[project name] so: ~/sources/git/had_launchpad-blink/)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://github.com/richardsonclay/had_launchpad-blink.git</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Change into the newly created directory:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ./had_launchpad-blink/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And make:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>make</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It should output main.elf along with a main.o file.</p>
+
+<p>From here, you should be able to follow the rest of the <a href="http://hackaday.com/2010/08/11/how-to-launchpad-programming-with-linux/">Hack A Day article</a> to transfer the binary file over to the LaunchPad.</p>
+
+<p>As for me, I&rsquo;m currently having trouble getting mspdebug to talk to the LaunchPad from <a href="https://www.virtualbox.org/">VirtualBox</a>. <a href="https://forums.virtualbox.org/viewtopic.php?f=5&amp;t=3355">This</a> post from the VirtualBox forums mentions something about USB timings not working properly in virtualization, but I am determined and will post a walkthrough if I am able to get mspdebug to talk properly using a VM.</p>
+
+<p>Happy hacking!</p>
+
+<p>Edit: <a href="http://clayrichardson.me/2012/03/16/ti-launchpad-development-on-ubuntu-11-10-running-in-virtualbox/">I was able to get it work, aw yeah!</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">clay richardson</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-15T16:43:00-05:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://clayrichardson.me/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/" data-via="" data-counturl="http://clayrichardson.me/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/" title="Previous Post: How to get latest stable version of nginx on ubuntu">&laquo; How to get latest stable version of nginx on ubuntu</a>
+      
+      
+        <a class="basic-alignment right" href="/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/" title="Next Post: TI LaunchPad development on Ubuntu 11.10 running in VirtualBox">TI LaunchPad development on Ubuntu 11.10 running in VirtualBox &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/log/2013/12/27/imagemagick-autocrop-scanned-documents/">ImageMagick Autocrop Scanned Documents</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume/">Configure Time Machine to Save Backups to a TrueCrypt Volume</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2013/03/29/brew-install-all-available-aws-tools/">Brew Install All Available AWS Tools</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2012/10/30/create-jpegs-with-random-content-using-python-multiprocessing/">Create JPEGs With Random Content Using Python Multiprocessing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2012/08/15/python-multiprocessing-queues-and-pipes/">Python Multiprocessing Queues and Pipes</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - clay richardson -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'clayrichardson';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://clayrichardson.me/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/';
+        var disqus_url = 'http://clayrichardson.me/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

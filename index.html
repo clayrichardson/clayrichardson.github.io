@@ -1,0 +1,707 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>//clay richardson</title>
+  <meta name="author" content="clay richardson">
+
+  
+  <meta name="description" content="I needed to autocrop a bunch of handwritten 14.8cm x 21cm notes I scanned.
+This requires ImageMagick: 1
+brew install imagemagick Use the convert &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://clayrichardson.me">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="//clay richardson" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46624039-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">//clay richardson</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:clayrichardson.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">log</a></li>
+  <li><a href="/pgp">pgp</a></li>
+  <li><a href="/about">about</a></li>
+  <li><a href="/log/archives">archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/log/2013/12/27/imagemagick-autocrop-scanned-documents/">ImageMagick Autocrop Scanned Documents</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-27T03:09:55-06:00" pubdate data-updated="true">Dec 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I needed to autocrop a bunch of handwritten 14.8cm x 21cm notes I scanned.
+This requires ImageMagick:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew install imagemagick</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Use the convert command:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>convert ./*.png -fuzz 1% -trim +repage -set filename:f "$(date)-%f" "./CroppedScans/Cropped-%[filename:f]"</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume/">Configure Time Machine to Save Backups to a TrueCrypt Volume</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-13T12:19:00-05:00" pubdate data-updated="true">May 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have an encrypted 1TB portable hard drive, and I wanted to use that as a Time Machine backup.</p>
+
+<p>TL;DR:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo tmutil setdestination /Volumes/TC\ Backup/</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/log/2013/03/29/brew-install-all-available-aws-tools/">Brew Install All Available AWS Tools</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-29T04:53:00-05:00" pubdate data-updated="true">Mar 29<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you happen to find yourself using a decent number of AWS services, you might find this useful. If there are any errata, please let me know.</p>
+
+<p>As of this writing, this should install all of the formulas that inherit from <code>AmazonWebServicesFormula</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew install auto-scaling aws-cfn-tools aws-elasticache aws-elasticbeanstalk aws-iam-tools aws-sns-cli cloud-watch ec2-ami-tools ec2-api-tools elb-tools rds-command-line-tools</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&rsquo;ll get some errors about failing to link service, which is the same file for all of the formulas which try to link it. You&rsquo;ll have to force the link, but let&rsquo;s make sure the files are all the same.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/log/2013/03/29/brew-install-all-available-aws-tools/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/log/2012/10/30/create-jpegs-with-random-content-using-python-multiprocessing/">Create JPEGs With Random Content Using Python Multiprocessing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-30T15:39:00-05:00" pubdate data-updated="true">Oct 30<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently, I had a need to quickly generate a large number of JPEGs. I wrote this python script to generate JPEG images with random dimensions and content, as well as uuid4 filenames:</p>
+
+<div><script src='https://gist.github.com/3861372.js'></script>
+<noscript><pre><code>import sys
+import os
+import time
+import uuid
+import random
+import signal
+import multiprocessing
+import numpy
+
+from optparse import OptionParser
+from PIL import Image
+
+processes = []
+kill_queue = multiprocessing.Queue()
+
+def launch_process(number, kill_queue, child_connection, args):
+
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+    kill_flag = False
+
+    path = args['path']
+    size = args['size']
+
+    while not kill_flag:
+        x = random.choice(range(1,size))
+        y = random.choice(range(1,size))
+        a = numpy.random.rand(x,y,3) * 255 
+        image_out = Image.fromarray(a.astype('uint8')).convert('RGBA')
+        file_name = os.path.join(path, '%s.%s' % (str(uuid.uuid4()), 'jpg'))
+        image_out.save(file_name)
+        print '%s: Saved %s %s x %s' % (number, file_name, x, y)
+        if not kill_queue.empty():
+            kill_flag = kill_queue.get()
+            print '%s: Got %s from the queue.' % (number, kill_flag)
+    return
+
+def signal_handler(signal, frame):
+
+    print '\nCaught interrupt, cleaning up...'
+    for process in processes:
+        kill_queue.put(True)
+
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+if __name__ == '__main__':
+
+    parser = OptionParser()
+    parser.add_option('-p', '--path', dest='path')
+    parser.add_option('-c', '--concurrency', dest='concurrency')
+    parser.add_option('-s', '--size', dest='size')
+    (options, args) = parser.parse_args()
+
+    path = os.path.abspath(options.path)
+    concurrency = int(options.concurrency)
+    size = int(options.size)
+
+    parent_connections = []
+
+    args = {}
+    args['path'] = path
+    args['size'] = size
+
+    for number in range(concurrency):
+        parent_connection, child_connection = multiprocessing.Pipe()
+        parent_connections.append(parent_connection)
+        process = multiprocessing.Process(target=launch_process, args=(number,kill_queue,child_connection,args,))
+        process.start()
+        processes.append(process)
+
+    while(1):
+        print 'Main process sleeping...'
+        time.sleep(1)
+
+    print 'Main thread done.'
+</code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/log/2012/08/15/python-multiprocessing-queues-and-pipes/">Python Multiprocessing Queues and Pipes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-15T04:19:00-05:00" pubdate data-updated="true">Aug 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m currently working on something that requires the use of parallel processing, so I decided to write a sample implementation to become familiar with <a href="http://docs.python.org/library/multiprocessing.html">Python&rsquo;s Multiprocessing module</a>.</p>
+
+<div><script src='https://gist.github.com/3358585.js'></script>
+<noscript><pre><code>import sys
+import time
+import random
+import signal
+import multiprocessing
+
+processes = []
+
+def launch_process(number, kill_queue, child_connection):
+
+    kill_flag = False
+
+    while not kill_flag:
+        while child_connection.poll():
+            print 'Process %s received message: %s' % (number, child_connection.recv())
+        child_connection.send('Process %s sending message to parent' % number)
+        sleep_time = random.choice(range(5))
+        print 'Thread %s, checking in... sleep: %s' % (number, sleep_time)
+        time.sleep(sleep_time)
+        if not kill_queue.empty():
+            kill_flag = kill_queue.get()
+            print 'Got %s from the queue.' % kill_flag
+    return
+
+def signal_handler(signal, frame):
+
+    print '\nCaught interrupt, cleaning up...'
+    for process in processes:
+        print process.terminate()
+
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+if __name__ == '__main__':
+
+    parent_connections = []
+    kill_queue = multiprocessing.Queue()
+
+    for number in range(5):
+        parent_connection, child_connection = multiprocessing.Pipe()
+        parent_connections.append(parent_connection)
+        process = multiprocessing.Process(target=launch_process, args=(number,kill_queue,child_connection,))
+        process.start()
+        processes.append(process)
+
+    for number in range(10):
+        print 'Main process sleeping: %s...' % number
+        time.sleep(1)
+
+    for number, parent_connection in enumerate(parent_connections):
+        parent_connection.send('Parent sending message to child %s' % number)
+
+    print 'Done with incremental messages.'
+    for number in range(10):
+        print 'Main process sleeping: %s...' %number
+        time.sleep(1)
+
+    for number in range(10):
+        child = random.choice(range(len(parent_connections)))
+        parent_connections[child].send('Parent sending message to child %s' % child)
+
+    for number in range(10):
+        for parent_connection in parent_connections:
+            while parent_connection.poll():
+                print 'Parent thread received message: %s' % parent_connection.recv()
+        print 'All messages processed, sleeping for 1 second before polling again.'
+        time.sleep(1)
+
+    for process in processes:
+        kill_queue.put(True)
+    
+    for process in processes:
+        process.join()
+
+    print 'Main thread done.'
+</code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/">TI LaunchPad Development on Ubuntu 11.10 Running in VirtualBox</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-16T02:45:00-05:00" pubdate data-updated="true">Mar 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In my previous post, I was having trouble debugging and writing the binary files to the <a href="http://www.ti.com/launchpad">TI LaunchPad</a> from Ubuntu 11.10 running in <a href="https://www.virtualbox.org/">VirtualBox</a> on Mac OS X Lion. I also tried using the VirtualBox ExtensionPack with USB 2.0 support to no avail.</p>
+
+<p>This is an extension of the <a href="http://clayrichardson.me/2012/03/15/ti-launchpad-development-on-ubuntu-11-10/">previous post</a> if you&rsquo;re running Ubuntu 11.10 in VirtualBox 4.1.10 on OS X Lion.</p>
+
+<p>So I&rsquo;ve figured out how to program and debug the Launchpad from within the guest OS. Albeit with a couple of caveats:</p>
+
+<ol>
+<li>The driver from <a href="http://code.google.com/p/osx-launchpad/">osx-launchpad</a> will need to be installed on the host OS.</li>
+<li>You have to use remote debugging via the GDB remote stub that mspdebug creates.</li>
+<li>When you use &ldquo;target remote&rdquo; from msp430-gdb, it will segfault, yeay!</li>
+<li>There will be some compiling from source to avoid the segfault party.</li>
+</ol>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/log/2012/03/16/ti-launchpad-development-on-ubuntu-11-dot-10-running-in-virtualbox/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/">TI LaunchPad Development on Ubuntu 11.10</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-15T16:43:00-05:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I got my hands on a couple of <a href="http://www.ti.com/launchpad">TI LaunchPads</a> and was surprised there is no official support for Linux. Sad day. Regardless, at $4.30 each + shipping, they&rsquo;re a steal.</p>
+
+<p>Interested in getting development running on Ubuntu, I was reading <a href="http://hackaday.com/2010/08/11/how-to-launchpad-programming-with-linux/">Hack A Day&rsquo;s LaunchPad on Ubuntu article</a> until I got to the <a href="http://mspgcc4.sourceforge.net/">mspgcc4 project page</a> and noticed</p>
+
+<blockquote><p>mspgcc4 is no longer supported. All contributions have been incorporated into <a href="http://sourceforge.net/projects/mspgcc/">mspgcc</a>, which has newer versions of all components.
+Following the link to the <a href="http://sourceforge.net/apps/mediawiki/mspgcc/index.php?title=MSPGCC_Wiki">GCC toolchain for MSP430 web site</a>, you&rsquo;ll find install instructions for &ldquo;<a href="http://sourceforge.net/apps/mediawiki/mspgcc/index.php?title=Install:debian">Ubuntu</a> and other Debian-derived distributions&rdquo; which will tell you &ldquo;mspgcc will be available in Ubuntu Oneiric. Packages are listed <a href="https://launchpad.net/ubuntu/oneiric/+search?text=msp430">here</a>, and were shepherded by Luca Bruno.&rdquo;</p></blockquote>
+
+<p><a href="http://en.wikipedia.org/wiki/Wikipedia:Too_long;_didn't_read">tl;dr</a>: Seeing the Hack A Day article was from August of 2010, I figured I would try to go with the more updated toolchain.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/log/2012/03/15/ti-launchpad-development-on-ubuntu-11-dot-10/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/log/2012/01/19/how-to-get-latest-stable-version-of-nginx-on-ubuntu/">How to Get Latest Stable Version of Nginx on Ubuntu</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-19T12:46:00-06:00" pubdate data-updated="true">Jan 19<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><figure class='code'><figcaption><span>[latest nginx]  (latest_nginx.sh)</span> <a href='/downloads/code/latest_nginx.sh'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>bash install nginx
+</span><span class='line'>sudo apt-get update
+</span><span class='line'>sudo apt-get install python-software-properites
+</span><span class='line'>sudo add-apt-repository ppa:nginx/stable
+</span><span class='line'>sudo apt-get update
+</span><span class='line'>sudo apt-get install nginx
+</span><span class='line'>nginx -v
+</span><span class='line'>sudo service nginx start
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/log/archives">Log Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/log/2013/12/27/imagemagick-autocrop-scanned-documents/">ImageMagick Autocrop Scanned Documents</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2013/05/13/configure-time-machine-to-save-backups-to-a-truecrypt-volume/">Configure Time Machine to Save Backups to a TrueCrypt Volume</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2013/03/29/brew-install-all-available-aws-tools/">Brew Install All Available AWS Tools</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2012/10/30/create-jpegs-with-random-content-using-python-multiprocessing/">Create JPEGs With Random Content Using Python Multiprocessing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/log/2012/08/15/python-multiprocessing-queues-and-pipes/">Python Multiprocessing Queues and Pipes</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - clay richardson -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'clayrichardson';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
