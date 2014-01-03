@@ -1,3 +1,18 @@
+
+.search {
+  padding: .3em .5em .3em .5em;
+  font-size: .9em;
+  @extend .font3;
+  line-height: 1.1em;
+  width: 100%;
+  /*@include border-radius(.5em);*/
+  @include background-clip(padding-box);
+  /*@include box-shadow(lighten($nav-bg, 2) 0 1px);*/
+  background-color: $nav-bg;
+  border: 1px solid $nav-border;
+  color: $color4;
+}
+
 body > nav {
   position: relative;
   background-color: $nav-bg;
@@ -11,17 +26,17 @@ body > nav {
     @include background-clip(padding-box);
     margin: 0; padding: 0;
     .search {
-      padding: .3em .5em .3em .5em;
-      font-size: .9em;
-      @extend .font3;
-      line-height: 1.1em;
-      width: 95%;
-      /*@include border-radius(.5em);*/
-      @include background-clip(padding-box);
-      /*@include box-shadow(lighten($nav-bg, 2) 0 1px);*/
-      background-color: lighten($nav-bg, 15);
-      border: 1px solid $nav-border;
-      color: $color4;
+      @extend .search;
+    }
+  }
+  input {
+    .search {
+      @extend .search;
+    }
+  }
+  input {
+    .text {
+      @extend .search;
     }
   }
   fieldset[role=search]{ float: right; width: 48%; }

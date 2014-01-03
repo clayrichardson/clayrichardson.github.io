@@ -7,7 +7,7 @@ $color5: #8EB1D5;
 
 $font-color: $color5;
 $bright-text-color: $font-color;
-$border-color: $color2;
+$border-color: transparent;
 
 /*$noise-bg: image-url('noise.png') top left !default;*/
 /*$img-border: inline-image('dotted-border.png') !default;*/
@@ -51,7 +51,7 @@ $sidebar-link-color: $link-color !default;
 $sidebar-link-color-hover: $link-color-hover !default;
 $sidebar-link-color-active: $link-color-active !default;
 $sidebar-color: $text-color !default;
-$sidebar-border: $border-color !default;
+$sidebar-border: $color2 !default;
 $sidebar-border-hover: transparent !default;
 $sidebar-link-color-subdued: transparent !default;
 $sidebar-link-color-subdued-hover: transparent !default;
