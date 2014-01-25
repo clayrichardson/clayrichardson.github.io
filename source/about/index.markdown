@@ -1,9 +1,8 @@
 ---
 layout: page
 title: "about"
-date: 2013-12-24 03:33
-comments: true
-sharing: true
+comments: false
+sharing: false
 footer: true
 ---
 [Github](https://github.com/clayrichardson)  
