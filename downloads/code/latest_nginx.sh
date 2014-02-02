@@ -1,4 +1,3 @@
-bash install nginx
 sudo apt-get update
 sudo apt-get install python-software-properites
 sudo add-apt-repository ppa:nginx/stable

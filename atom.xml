@@ -4,7 +4,7 @@
   <title><![CDATA[//clay richardson]]></title>
   <link href="http://clayrichardson.me/atom.xml" rel="self"/>
   <link href="http://clayrichardson.me/"/>
-  <updated>2014-02-01T16:41:59-08:00</updated>
+  <updated>2014-02-01T17:16:59-08:00</updated>
   <id>http://clayrichardson.me/</id>
   <author>
     <name><![CDATA[clay richardson]]></name>
@@ -1316,9 +1316,7 @@ Following the link to the <a href="http://sourceforge.net/apps/mediawiki/mspgcc/
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>bash install nginx
-</span><span class='line'>sudo apt-get update
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get update
 </span><span class='line'>sudo apt-get install python-software-properites
 </span><span class='line'>sudo add-apt-repository ppa:nginx/stable
 </span><span class='line'>sudo apt-get update
